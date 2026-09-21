@@ -6,7 +6,7 @@
 <div class="container">
     <h1>Order Confirmed</h1>
     <p>Your order number is #{{ order.id }}.</p>
-    <p>Total: ${{ order.total_amount }}</p>
+    <p>Total: ₹{{ order.total_amount }}</p>
     <p>Status: {{ order.get_status_display }}</p>
     <a href="{% url 'home' %}">Continue shopping</a>
 </div>

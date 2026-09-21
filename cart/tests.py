@@ -16,7 +16,7 @@ class CartTests(TestCase):
         middleware.process_request(self.request)
         self.request.session.save()
 
-        category = Category.objects.create(name='Coffee Beans', slug='coffee-beans')
+        category, _ = Category.objects.get_or_create(name='Coffee Beans', slug='coffee-beans')
         self.product = Product.objects.create(
             name='Test Coffee',
             category=category,
@@ -40,3 +40,10 @@ class CartTests(TestCase):
         cart.update_quantity(self.product, 0)
 
         self.assertEqual(len(cart), 0)
+
+    # Confirm that a larger selected packet uses a proportional final price.
+    def test_weight_changes_the_cart_price(self):
+        cart = Cart(self.request)
+        cart.add(self.product, grind='french-press', weight=1000)
+
+        self.assertEqual(cart.get_total_price(), Decimal('50.00'))

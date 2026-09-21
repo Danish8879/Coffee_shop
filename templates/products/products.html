@@ -10,15 +10,20 @@
     <div class="product-grid">
         {% for product in products %}
             <div class="product-card">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% endif %}
                 <h2>{{ product.name }}</h2>
-                <p>${{ product.price }}</p>
-                <form method="post" action="{% url 'cart:add' product.id %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="view-button">Add to cart</button>
-                </form>
+                <p>{{ product.description }}</p>
+                <p>Starting at ₹{{ product.price }} for 250 g</p>
+                {% if category.slug == 'coffee-beans' %}
+                    <a class="view-button" href="{% url 'product_detail' product.id %}">Choose grind and weight</a>
+                {% else %}
+                    <p>Options for this category will be added soon.</p>
+                {% endif %}
             </div>
+        {% empty %}
+            <p>No products are available in this category yet.</p>
         {% endfor %}
     </div>
 </div>

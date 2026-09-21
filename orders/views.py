@@ -34,8 +34,10 @@ def checkout(request):
                         order=order,
                         product=product,
                         product_name=product.name,
-                        price=product.price,
+                        price=item['unit_price'],
                         quantity=item['quantity'],
+                        grind=item['grind'],
+                        weight=item['weight'],
                     )
 
                 cart.clear()

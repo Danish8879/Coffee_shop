@@ -17,7 +17,7 @@ class CheckoutTests(TestCase):
             email='student@example.com',
             password='test-password',
         )
-        category = Category.objects.create(name='Coffee Beans', slug='coffee-beans')
+        category, _ = Category.objects.get_or_create(name='Coffee Beans', slug='coffee-beans')
         self.product = Product.objects.create(
             name='Test Coffee',
             category=category,
@@ -48,4 +48,6 @@ class CheckoutTests(TestCase):
         self.assertEqual(order_item.product_name, 'Test Coffee')
         self.assertEqual(order_item.price, Decimal('12.50'))
         self.assertEqual(order_item.quantity, 2)
+        self.assertEqual(order_item.grind, 'whole-beans')
+        self.assertEqual(order_item.weight, 250)
         self.assertNotIn('cart', self.client.session)

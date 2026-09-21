@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from products.models import Product
+from products.forms import ProductOptionsForm
 
 from .cart import Cart
 
@@ -16,12 +17,16 @@ def cart_detail(request):
 @require_POST
 def cart_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    quantity = request.POST.get('quantity', 1)
+    form = ProductOptionsForm(request.POST)
 
-    try:
-        Cart(request).add(product, quantity=quantity)
+    if form.is_valid():
+        Cart(request).add(
+            product,
+            grind=form.cleaned_data['grind'],
+            weight=form.cleaned_data['weight'],
+        )
         messages.success(request, f'{product.name} was added to your cart.')
-    except (TypeError, ValueError):
+    else:
         messages.error(request, 'Please enter a valid quantity.')
 
     return redirect('cart:detail')
@@ -32,10 +37,19 @@ def cart_add(request, product_id):
 def cart_update(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     quantity = request.POST.get('quantity', 1)
+    form = ProductOptionsForm(request.POST)
 
     try:
-        Cart(request).update_quantity(product, quantity)
-        messages.success(request, 'Cart quantity updated.')
+        if form.is_valid():
+            Cart(request).update_quantity(
+                product,
+                quantity,
+                grind=form.cleaned_data['grind'],
+                weight=form.cleaned_data['weight'],
+            )
+            messages.success(request, 'Cart quantity updated.')
+        else:
+            messages.error(request, 'Please keep the selected grind and weight.')
     except (TypeError, ValueError):
         messages.error(request, 'Please enter a valid quantity.')
 
@@ -46,6 +60,10 @@ def cart_update(request, product_id):
 @require_POST
 def cart_remove(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    Cart(request).remove(product)
+    Cart(request).remove(
+        product,
+        grind=request.POST.get('grind', 'whole-beans'),
+        weight=request.POST.get('weight', 250),
+    )
     messages.success(request, f'{product.name} was removed from your cart.')
     return redirect('cart:detail')

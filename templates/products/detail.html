@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ product.name }} - Coffee E-commerce{% endblock %}
+
+{% block content %}
+<div class="container" data-base-price="{{ product.price }}">
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <p>Base price: ₹{{ product.price }} for 250 g</p>
+
+    <form method="post" action="{% url 'cart:add' product.id %}">
+        {% csrf_token %}
+        <p>{{ form.grind.label_tag }} {{ form.grind }}</p>
+        <p>{{ form.weight.label_tag }} {{ form.weight }}</p>
+        <p><strong>Final price: ₹<span id="final-price">{{ product.price }}</span></strong></p>
+        <button type="submit">Add to cart</button>
+    </form>
+</div>
+
+<script>
+    const weightInput = document.getElementById('id_weight');
+    const basePrice = Number(document.querySelector('[data-base-price]').dataset.basePrice);
+    const finalPrice = document.getElementById('final-price');
+
+    // Update the displayed price whenever the visitor changes packet weight.
+    function updateFinalPrice() {
+        finalPrice.textContent = (basePrice * Number(weightInput.value) / 250).toFixed(2);
+    }
+
+    weightInput.addEventListener('change', updateFinalPrice);
+</script>
+{% endblock %}
