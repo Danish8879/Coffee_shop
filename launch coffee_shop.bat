@@ -1,0 +1,3 @@
+cd C:\Django\coffee_shop\Scripts
+activate
+cd C:\Django\coffee_shop\coffee_shop

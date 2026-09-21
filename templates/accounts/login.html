@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'login_style.css' %}">
+</head>
+<body>
+  <div class="container">
+    <div class="login form">
+      <header>Login</header>
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="#">Forgot password?</a>
+        <input type="submit" class="button" value="Login">
+      </form>
+      <div class="signup">
+
+        {% for message in messags %}
+          <p id="messages"> {{message}} </p>
+        {% endfor %}
+        <span class="signup">Don't have an account?
+          <a href="{% url 'register' %}" >Signup</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

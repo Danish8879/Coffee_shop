@@ -1,0 +1,180 @@
+/* base/static/base/base_style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
+
+header {
+    background: #3e2723;
+    padding: 20px 0;
+    color: white;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1em;
+}
+
+.user-options a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 1em;
+}
+
+.home-section {
+    background: url('/static/home/Background.jpg') no-repeat center center/cover;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.home-content {
+    text-align: center;
+    margin-left: 2cm;
+}
+
+.home-content h1 {
+    font-size: 3em;
+}
+
+.home-content p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    background: #d7ccc8;
+    color: #3e2723;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.categories-section, .about-section, .contact-section {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.categories-section h2, .about-section h2, .contact-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.categories-items {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap; /* Make the items wrap on smaller screens */
+}
+
+.category-item {
+    background: #d7ccc8;
+    padding: 20px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: left;
+    color: #3e2723;
+    background-size: cover; /* Ensure the image covers the element */
+    background-position: center; /* Center the image */
+    color: white; /* Ensure text is visible on background */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: add text shadow for better visibility */
+    flex: 1 1 calc(33.333% - 40px); /* Responsive flex item with margin */
+    margin: 10px;
+    min-width: 200px; /* Ensure a minimum width */
+}
+
+.category-coffee-beans {
+    background-image: url('/static/home/coffeebean.jpg');
+}
+
+.category-canned-coffee {
+    background-image: url('/static/home/canned_coffee.jpg');
+}
+
+.category-brewing-equipment {
+    background-image: url('/static/home/chimex.jpg');
+}
+
+.product-list-section {
+    padding: 60px 20px;
+}
+
+.product-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.product-item {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+}
+
+.product-item img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+footer {
+    background: #3e2723;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .home-content {
+        margin-left: 1cm; /* Adjust the margin for smaller screens */
+    }
+
+    .home-content h1 {
+        font-size: 2em; /* Reduce font size for smaller screens */
+    }
+
+    .categories-items {
+        flex-direction: column;
+    }
+
+    .category-item {
+        flex: 1 1
+    }
+}

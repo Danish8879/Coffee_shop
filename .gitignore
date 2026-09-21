@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+Lib/
+Scripts/
+pyvenv.cfg
+
+# Local development data and secrets
+db.sqlite3
+*.sqlite3
+.env
+coffee_shop/information.txt
+
+# User-uploaded files and static build output
+media/
+staticfiles/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

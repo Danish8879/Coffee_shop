@@ -1,0 +1,44 @@
+<!-- templates/home/home.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Home - Coffee E-commerce{% endblock %}
+
+{% block content %}
+<section id="home" class="home-section">
+    <div class="home-content">
+        <h1>Welcome to Our Coffee Shop</h1>
+        <p>Discover the best coffee beans, canned coffee, and brewing equipment.</p>
+        <a href="#categories" class="btn">Shop Now</a>
+    </div>
+</section>
+
+<section id="categories" class="categories-section">
+    <h2>Categories</h2>
+    <div class="categories-items">
+        <a href="{% url 'product_list_by_category' category_slug='coffee-beans' %}" class="category-item category-coffee-beans">
+            <h3>Coffee Beans</h3>
+            <p>High-quality coffee beans from around the world.</p>
+        </a>
+        <a href="{% url 'product_list_by_category' category_slug='canned-coffee' %}" class="category-item category-canned-coffee">
+            <h3>Canned Coffee</h3>
+            <p>Convenient and delicious canned coffee options.</p>
+        </a>
+        <a href="{% url 'product_list_by_category' category_slug='brewing-equipment' %}" class="category-item category-brewing-equipment">
+            <h3>Brewing Equipment</h3>
+            <p>Top-notch equipment for the perfect brew.</p>
+        </a>
+    </div>
+</section>
+
+<section id="about" class="about-section">
+    <h2>About Us</h2>
+    <p>We are passionate about coffee and dedicated to bringing you the best products for your coffee journey. Our selection includes the finest coffee beans, convenient canned coffee, and premium brewing equipment.</p>
+</section>
+
+<section id="contact" class="contact-section">
+    <h2>Contact Us</h2>
+    <p>Email: info@coffee-ecommerce.com</p>
+    <p>Phone: (123) 456-7890</p>
+</section>
+{% endblock %}

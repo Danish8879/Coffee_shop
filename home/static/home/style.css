@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
+
+header {
+    background: #3e2723;
+    padding: 20px 0;
+    color: white;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1em;
+}
+
+.user-options a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 1em;
+}
+
+.home-section {
+    background: url('/static/home/Background.jpg') no-repeat center center/cover;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.home-content {
+    text-align: center;
+    margin-left: 2cm;  /* Adjust the margin to shift content */
+}
+
+.home-content h1 {
+    font-size: 3em;
+}
+
+.home-content p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    background: #d7ccc8;
+    color: #3e2723;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.categories-section, .about-section, .contact-section {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.categories-section h2, .about-section h2, .contact-section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.categories-items {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.category-item {
+    background: #d7ccc8;
+    padding: 20px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: left;
+    color: #3e2723;
+    background-size: cover; /* Ensure the image covers the element */
+    background-position: center; /* Center the image */
+    color: white; /* Ensure text is visible on background */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: add text shadow for better visibility */
+}
+
+.category-coffee-beans {
+    background-image: url('home/static/home/coffeebean.jpg');
+}
+
+.category-canned-coffee {
+    background-image: url('/static/home/canned_coffee.jpg');
+}
+
+.category-brewing-equipment {
+    background-image: url('/static/home/chimex.jpg');
+}
+
+footer {
+    background: #3e2723;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}

@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Signup</title>
+  <link rel="stylesheet" href="{% static 'register_style.css' %}">
+</head>
+<body>
+  <div class="container">
+    <div class="registration form">
+      <header>Signup</header>
+      <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        {{ form.first_name.label }}
+        {{ form.first_name}}
+        {{ form.last_name.label }}
+        {{ form.last_name}}
+        
+        {{ form.email.label }}
+        {{ form.email }}
+
+        {{ form.password1.label }}
+        {{ form.password1 }}
+        {{ form.password2.label }}
+        {{ form.password2 }}
+        <input type="submit" class="button" value="Signup">
+      </form>
+      {{ form.errors }}
+      <div class="signup">
+        <span class="signup">Already have an account?
+          <a href="{% url 'login' %}">Login</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+{% comment %} <h3> Register </h3>
+
+<form method ="POST" action="">
+  
+  {{ form.username.label }}
+  
+  {{ form.email.label }}
+ 
+
+  {{ form.password1.label }}
+  
+
+  {{ form.password2.label }}
+ 
+
+
+
+  <input type="submit" name="Signup">
+</form> {% endcomment %}
