@@ -13,7 +13,11 @@
                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
                 <h2>{{ product.name }}</h2>
                 <p>${{ product.price }}</p>
-                <button class="view-button">View</button>
+                <form method="post" action="{% url 'cart:add' product.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="view-button">Add to cart</button>
+                </form>
             </div>
         {% endfor %}
     </div>

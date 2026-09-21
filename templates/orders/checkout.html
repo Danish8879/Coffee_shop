@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Checkout - Coffee E-commerce{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Checkout</h1>
+    <p>Payment method: Cash on Delivery</p>
+    <p>Order total: ${{ cart.get_total_price }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Place order</button>
+    </form>
+</div>
+{% endblock %}
