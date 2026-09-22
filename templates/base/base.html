@@ -14,21 +14,26 @@
             <div class="logo">Coffee E-commerce</div>
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="#categories">Categories</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="{% url 'home' %}#categories">Categories</a></li>
+                <li><a href="{% url 'home' %}#about">About</a></li>
+                <li><a href="{% url 'home' %}#contact">Contact</a></li>
             </ul>
+            <form method="get" action="{% url 'product_search' %}" class="search-form">
+                <input type="search" name="q" placeholder="Search products" value="{{ request.GET.q }}">
+            </form>
             <div class="user-options">
                 <a href="{% url 'cart:detail' %}">Cart</a>
                 {% if user.is_authenticated %}
                     <span>Welcome, {{ user.first_name }}</span>
+                    <a href="{% url 'orders:list' %}">My orders</a>
+                    <a href="{% url 'profile' %}">Profile</a>
                     <form method="post" action="{% url 'logout' %}" class="logout-form">
                         {% csrf_token %}
                         <button type="submit">Logout</button>
                     </form>
                 {% else %}
                     <a href="{% url 'login' %}">Login</a>
-                    <a href="#profile">Profile</a>
+                    <a href="{% url 'register' %}">Sign up</a>
                 {% endif %}
             </div>
         </nav>

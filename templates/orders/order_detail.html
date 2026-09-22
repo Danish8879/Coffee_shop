@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Order #{{ order.id }} - Coffee E-commerce{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Order #{{ order.id }}</h1>
+    <p>Placed on {{ order.created_at|date:"d M Y, H:i" }}</p>
+    <p>Status: <strong>{{ order.get_status_display }}</strong></p>
+    <p>Payment: {{ order.get_payment_method_display }} ({{ order.get_payment_status_display }})</p>
+
+    <h2>Items</h2>
+    <table class="order-table">
+        <thead>
+            <tr><th>Product</th><th>Options</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{% if item.weight %}{{ item.grind|title }}, {{ item.weight }} g{% else %}-{% endif %}</td>
+                    <td>₹{{ item.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.get_cost }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Total: ₹{{ order.total_amount }}</h2>
+
+    <h2>Delivery details</h2>
+    <p>{{ order.first_name }} {{ order.last_name }}<br>{{ order.address|linebreaksbr }}<br>{{ order.phone }}</p>
+
+    {% if order.needs_payment %}
+        <p><a href="{% url 'orders:pay' order.id %}">Pay now</a></p>
+    {% endif %}
+
+    {% if order.can_be_cancelled_by_user %}
+        <form method="post" action="{% url 'orders:cancel' order.id %}" onsubmit="return confirm('Cancel this order?');">
+            {% csrf_token %}
+            <button type="submit">Cancel order</button>
+        </form>
+    {% endif %}
+
+    <p><a href="{% url 'orders:list' %}">Back to my orders</a></p>
+</div>
+{% endblock %}

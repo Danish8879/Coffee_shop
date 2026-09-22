@@ -13,23 +13,40 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 
 import os
+import sys
+
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 
+# Read local settings such as SECRET_KEY and DEBUG from a .env file (see .env.example).
+load_dotenv(BASE_DIR / '.env')
+
+
+# Read a true/false setting from the environment.
+def env_bool(name, default=False):
+    return os.environ.get(name, str(default)).strip().lower() in ('1', 'true', 'yes', 'on')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5i8j_=o9=qqm43-#4581-svg&9o0mj+9974h72abmpjwtq^b-n'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_bool('DJANGO_DEBUG', False)
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    if not DEBUG:
+        raise ImproperlyConfigured('Set DJANGO_SECRET_KEY in the environment or in the .env file.')
+    # A throwaway key so a fresh clone still runs in development without a .env file.
+    SECRET_KEY = 'django-insecure-development-only-key'
+
+ALLOWED_HOSTS = [host.strip() for host in os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if host.strip()]
 
 
 # Application definition
@@ -47,6 +64,10 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'orders',
+    'api',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -117,7 +138,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# Order dates are shown in Indian time; they are still stored in UTC (USE_TZ = True).
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -128,13 +150,73 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# Where `collectstatic` gathers all static files for deployment.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Product images uploaded through Django admin are stored outside the source
 # static assets and are served locally while DEBUG is enabled.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Emails (verification and password reset) are printed to the runserver console
+# during development instead of being sent through a real mail server.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Coffee E-commerce <no-reply@coffee-shop.local>'
+
+LOGIN_URL = 'login'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# REST API
+# Token login is for API clients (Postman, mobile apps); session login lets the browsable API
+# and Swagger docs work for a user logged in on the website. Token comes first so requests
+# without credentials get a proper 401 response.
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Coffee Shop API',
+    'DESCRIPTION': 'REST API for browsing products, managing your profile and placing orders.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+
+# Logging: important shop events (logins, orders, cancellations) are printed to the console.
+# Tests only show warnings so their output stays readable.
+LOG_LEVEL = 'WARNING' if 'test' in sys.argv else os.environ.get('DJANGO_LOG_LEVEL', 'INFO')
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[{asctime}] {levelname} {name}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'accounts': {'handlers': ['console'], 'level': LOG_LEVEL},
+        'orders': {'handlers': ['console'], 'level': LOG_LEVEL},
+        'api': {'handlers': ['console'], 'level': LOG_LEVEL},
+    },
+}

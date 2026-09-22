@@ -3,6 +3,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
 
+from orders.forms import validate_phone
+
+from .models import Profile
+
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}))
@@ -37,3 +41,23 @@ class SignupForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class UserNameForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['phone', 'address']
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    # Phone is optional on the profile, but must look like a real number when given.
+    def clean_phone(self):
+        phone = self.cleaned_data['phone'].strip()
+        return validate_phone(phone) if phone else phone

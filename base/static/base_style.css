@@ -47,6 +47,31 @@ nav {
     font-size: 1em;
 }
 
+.search-form input {
+    padding: 4px 8px;
+}
+
+.order-table {
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.order-table th,
+.order-table td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    text-align: left;
+}
+
+.pagination {
+    margin: 20px 0;
+}
+
+.pagination a,
+.pagination span {
+    margin-right: 10px;
+}
+
 /* Logout is a POST form, styled to look like the other nav links. */
 .logout-form {
     display: inline;

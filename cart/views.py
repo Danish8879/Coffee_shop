@@ -19,6 +19,10 @@ def cart_add(request, product_id):
     product = get_object_or_404(Product.objects.select_related('category'), id=product_id)
     form = get_add_to_cart_form(product, request.POST)
 
+    if not product.in_stock:
+        messages.error(request, f'Sorry, {product.name} is out of stock.')
+        return redirect('product_detail', product_id=product.id)
+
     if not form.is_valid():
         messages.error(request, 'Please choose valid options and a quantity between 1 and 20.')
         return redirect('product_detail', product_id=product.id)

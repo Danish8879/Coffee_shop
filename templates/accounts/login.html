@@ -14,8 +14,9 @@
       <header>Login</header>
       <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
         {{ form.as_p }}
-        <a href="#">Forgot password?</a>
+        <a href="{% url 'password_reset' %}">Forgot password?</a>
         <input type="submit" class="button" value="Login">
       </form>
       <div class="signup">

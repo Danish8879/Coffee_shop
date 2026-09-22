@@ -1,21 +1,22 @@
 from django import forms
 
+GRIND_CHOICES = (
+    ('whole-beans', 'Whole beans'),
+    ('french-press', 'French press'),
+    ('espresso-machine', 'Espresso machine'),
+    ('turkish-grind', 'Turkish grind'),
+)
+WEIGHT_CHOICES = ((250, '250 g'), (500, '500 g'), (750, '750 g'), (1000, '1 kg'))
+MAX_ORDER_QUANTITY = 20
+
 
 class QuantityForm(forms.Form):
-    quantity = forms.IntegerField(min_value=1, max_value=20, initial=1)
+    quantity = forms.IntegerField(min_value=1, max_value=MAX_ORDER_QUANTITY, initial=1)
 
 
 class ProductOptionsForm(QuantityForm):
-    grind = forms.ChoiceField(choices=(
-        ('whole-beans', 'Whole beans'),
-        ('french-press', 'French press'),
-        ('espresso-machine', 'Espresso machine'),
-        ('turkish-grind', 'Turkish grind'),
-    ))
-    weight = forms.TypedChoiceField(
-        choices=((250, '250 g'), (500, '500 g'), (750, '750 g'), (1000, '1 kg')),
-        coerce=int,
-    )
+    grind = forms.ChoiceField(choices=GRIND_CHOICES)
+    weight = forms.TypedChoiceField(choices=WEIGHT_CHOICES, coerce=int)
 
 
 # Return the add-to-cart form that matches the product: bean options or quantity only.

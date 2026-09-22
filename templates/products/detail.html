@@ -12,6 +12,10 @@
         <p>Price: ₹{{ product.price }}</p>
     {% endif %}
 
+    {% if not product.in_stock %}
+        <p><strong>Out of stock</strong></p>
+    {% else %}
+    <p>In stock: {{ product.stock }}</p>
     <form method="post" action="{% url 'cart:add' product.id %}">
         {% csrf_token %}
         {% if product.has_bean_options %}
@@ -22,9 +26,10 @@
         <p>{{ form.quantity.label_tag }} {{ form.quantity }}</p>
         <button type="submit">Add to cart</button>
     </form>
+    {% endif %}
 </div>
 
-{% if product.has_bean_options %}
+{% if product.has_bean_options and product.in_stock %}
 <script>
     const weightInput = document.getElementById('id_weight');
     const basePrice = Number(document.querySelector('[data-base-price]').dataset.basePrice);

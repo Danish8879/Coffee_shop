@@ -1,0 +1,35 @@
+{% extends 'base/base.html' %}
+
+{% block title %}My Profile - Coffee E-commerce{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>My Profile</h1>
+    <p>Email: {{ user.email|default:user.username }}
+        {% if profile.is_email_verified %}(verified){% else %}(not verified){% endif %}
+    </p>
+    {% if not profile.is_email_verified %}
+        <form method="post" action="{% url 'resend_verification' %}">
+            {% csrf_token %}
+            <button type="submit">Send verification email</button>
+        </form>
+    {% endif %}
+
+    <h2>Edit details</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <p><a href="{% url 'password_reset' %}">Change password</a></p>
+
+    <h2>Recent orders</h2>
+    {% for order in recent_orders %}
+        <p><a href="{% url 'orders:detail' order.id %}">Order #{{ order.id }}</a> - ₹{{ order.total_amount }} - {{ order.get_status_display }}</p>
+    {% empty %}
+        <p>No orders yet.</p>
+    {% endfor %}
+    <p><a href="{% url 'orders:list' %}">View all orders</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Payment - Coffee E-commerce{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Pay for order #{{ order.id }}</h1>
+    <p>Amount due: <strong>₹{{ order.total_amount }}</strong></p>
+    <p>This is a demo payment page. No real money is charged.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Pay ₹{{ order.total_amount }}</button>
+    </form>
+    <p><a href="{% url 'orders:detail' order.id %}">Pay later</a></p>
+</div>
+{% endblock %}

@@ -4,10 +4,12 @@
 
 {% block content %}
 <div class="container">
-    <h1>Order Confirmed</h1>
+    <h1>Thank you for your order</h1>
     <p>Your order number is #{{ order.id }}.</p>
     <p>Total: ₹{{ order.total_amount }}</p>
     <p>Status: {{ order.get_status_display }}</p>
+    <p>Payment: {{ order.get_payment_method_display }} ({{ order.get_payment_status_display }})</p>
+    <p><a href="{% url 'orders:detail' order.id %}">View order details</a></p>
     <a href="{% url 'home' %}">Continue shopping</a>
 </div>
 {% endblock %}

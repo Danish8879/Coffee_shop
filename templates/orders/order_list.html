@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+
+{% block title %}My Orders - Coffee E-commerce{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>My Orders</h1>
+
+    {% if orders %}
+        <table class="order-table">
+            <thead>
+                <tr><th>Order</th><th>Date</th><th>Total</th><th>Status</th><th>Payment</th></tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td><a href="{% url 'orders:detail' order.id %}">#{{ order.id }}</a></td>
+                        <td>{{ order.created_at|date:"d M Y" }}</td>
+                        <td>₹{{ order.total_amount }}</td>
+                        <td>{{ order.get_status_display }}</td>
+                        <td>{{ order.get_payment_status_display }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have not placed any orders yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

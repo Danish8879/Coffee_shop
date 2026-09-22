@@ -1,8 +1,7 @@
 from decimal import Decimal
 
+from products.forms import MAX_ORDER_QUANTITY as MAX_QUANTITY
 from products.models import Product
-
-MAX_QUANTITY = 20
 
 
 class Cart:

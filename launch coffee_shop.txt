@@ -1,4 +1,3 @@
-cd C:\Django\coffee_shop\Scripts
-activate
 cd C:\Django\coffee_shop\coffee_shop
+.venv\Scripts\activate
 python manage.py runserver

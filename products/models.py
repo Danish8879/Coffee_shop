@@ -18,6 +18,10 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='products/', blank=True)
+    # Units in stock; for coffee beans one unit is one packet of any weight.
+    stock = models.PositiveIntegerField(default=50)
+    # Hide a product from the shop without deleting it.
+    is_available = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -26,6 +30,11 @@ class Product(models.Model):
     @property
     def has_bean_options(self):
         return self.category.slug == COFFEE_BEANS_SLUG
+
+    # A product can be bought when it is listed and has at least one unit left.
+    @property
+    def in_stock(self):
+        return self.is_available and self.stock > 0
 
     # Calculate the price for a selected weight in grams; products without a weight use the base price.
     def get_price_for_weight(self, weight_grams=None):

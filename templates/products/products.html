@@ -2,31 +2,59 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}{{ category.name }} - Coffee E-commerce{% endblock %}
+{% block title %}{{ title }} - Coffee E-commerce{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>{{ category.name }}</h1>
+    <h1>{{ title }}</h1>
+
+    <form method="get" class="product-filters">
+        {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+        <label for="sort">Sort by</label>
+        <select id="sort" name="sort" onchange="this.form.submit()">
+            <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
+            <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: low to high</option>
+            <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price: high to low</option>
+        </select>
+        <noscript><button type="submit">Apply</button></noscript>
+    </form>
+
     <div class="product-grid">
-        {% for product in products %}
+        {% for product in page_obj %}
             <div class="product-card">
                 {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{{ product.name }}">
                 {% endif %}
                 <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
-                {% if category.slug == 'coffee-beans' %}
+                {% if product.has_bean_options %}
                     <p>Starting at ₹{{ product.price }} for 250 g</p>
                 {% else %}
                     <p>₹{{ product.price }}</p>
                 {% endif %}
-                <a class="view-button" href="{% url 'product_detail' product.id %}">
-                    {% if category.slug == 'coffee-beans' %}Choose grind and weight{% else %}View product{% endif %}
-                </a>
+                {% if product.in_stock %}
+                    <a class="view-button" href="{% url 'product_detail' product.id %}">
+                        {% if product.has_bean_options %}Choose grind and weight{% else %}View product{% endif %}
+                    </a>
+                {% else %}
+                    <p><strong>Out of stock</strong></p>
+                {% endif %}
             </div>
         {% empty %}
-            <p>No products are available in this category yet.</p>
+            <p>No products found.</p>
         {% endfor %}
     </div>
+
+    {% if page_obj.has_other_pages %}
+        <nav class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}sort={{ sort }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?{% if query %}q={{ query|urlencode }}&{% endif %}sort={{ sort }}&page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </nav>
+    {% endif %}
 </div>
 {% endblock %}
