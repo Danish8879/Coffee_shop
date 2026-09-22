@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.views.decorators.http import require_POST
 
 from accounts.views import CustomLoginView, profile, registerPage, resend_verification, verify_email
 
@@ -7,7 +8,8 @@ from accounts.views import CustomLoginView, profile, registerPage, resend_verifi
 urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('register/', registerPage, name='register'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    # POST only, so a link or image on another page cannot log the user out.
+    path('logout/', require_POST(auth_views.LogoutView.as_view(next_page='/')), name='logout'),
     path('profile/', profile, name='profile'),
     path('verify/resend/', resend_verification, name='resend_verification'),
     path('verify/<str:token>/', verify_email, name='verify_email'),
