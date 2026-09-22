@@ -47,6 +47,21 @@ nav {
     font-size: 1em;
 }
 
+/* Logout is a POST form, styled to look like the other nav links. */
+.logout-form {
+    display: inline;
+}
+
+.logout-form button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    margin-left: 20px;
+    padding: 0;
+}
+
 .home-section {
     background: url('/static/home/Background.jpg') no-repeat center center/cover;
     height: 600px;

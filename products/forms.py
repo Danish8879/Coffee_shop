@@ -1,7 +1,11 @@
 from django import forms
 
 
-class ProductOptionsForm(forms.Form):
+class QuantityForm(forms.Form):
+    quantity = forms.IntegerField(min_value=1, max_value=20, initial=1)
+
+
+class ProductOptionsForm(QuantityForm):
     grind = forms.ChoiceField(choices=(
         ('whole-beans', 'Whole beans'),
         ('french-press', 'French press'),
@@ -13,9 +17,8 @@ class ProductOptionsForm(forms.Form):
         coerce=int,
     )
 
-    # Ensure the selected weight is one of the supported packet sizes.
-    def clean_weight(self):
-        weight = self.cleaned_data['weight']
-        if weight not in (250, 500, 750, 1000):
-            raise forms.ValidationError('Choose a valid packet weight.')
-        return weight
+
+# Return the add-to-cart form that matches the product: bean options or quantity only.
+def get_add_to_cart_form(product, data=None):
+    form_class = ProductOptionsForm if product.has_bean_options else QuantityForm
+    return form_class(data)

@@ -20,8 +20,8 @@
       </form>
       <div class="signup">
 
-        {% for message in messags %}
-          <p id="messages"> {{message}} </p>
+        {% for message in messages %}
+          <p class="messages"> {{message}} </p>
         {% endfor %}
         <span class="signup">Don't have an account?
           <a href="{% url 'register' %}" >Signup</a>

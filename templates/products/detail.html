@@ -6,17 +6,25 @@
 <div class="container" data-base-price="{{ product.price }}">
     <h1>{{ product.name }}</h1>
     <p>{{ product.description }}</p>
-    <p>Base price: ₹{{ product.price }} for 250 g</p>
+    {% if product.has_bean_options %}
+        <p>Base price: ₹{{ product.price }} for 250 g</p>
+    {% else %}
+        <p>Price: ₹{{ product.price }}</p>
+    {% endif %}
 
     <form method="post" action="{% url 'cart:add' product.id %}">
         {% csrf_token %}
-        <p>{{ form.grind.label_tag }} {{ form.grind }}</p>
-        <p>{{ form.weight.label_tag }} {{ form.weight }}</p>
-        <p><strong>Final price: ₹<span id="final-price">{{ product.price }}</span></strong></p>
+        {% if product.has_bean_options %}
+            <p>{{ form.grind.label_tag }} {{ form.grind }}</p>
+            <p>{{ form.weight.label_tag }} {{ form.weight }}</p>
+            <p><strong>Price per packet: ₹<span id="final-price">{{ product.price }}</span></strong></p>
+        {% endif %}
+        <p>{{ form.quantity.label_tag }} {{ form.quantity }}</p>
         <button type="submit">Add to cart</button>
     </form>
 </div>
 
+{% if product.has_bean_options %}
 <script>
     const weightInput = document.getElementById('id_weight');
     const basePrice = Number(document.querySelector('[data-base-price]').dataset.basePrice);
@@ -29,4 +37,5 @@
 
     weightInput.addEventListener('change', updateFinalPrice);
 </script>
+{% endif %}
 {% endblock %}

@@ -15,12 +15,14 @@
                 {% endif %}
                 <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
-                <p>Starting at ₹{{ product.price }} for 250 g</p>
                 {% if category.slug == 'coffee-beans' %}
-                    <a class="view-button" href="{% url 'product_detail' product.id %}">Choose grind and weight</a>
+                    <p>Starting at ₹{{ product.price }} for 250 g</p>
                 {% else %}
-                    <p>Options for this category will be added soon.</p>
+                    <p>₹{{ product.price }}</p>
                 {% endif %}
+                <a class="view-button" href="{% url 'product_detail' product.id %}">
+                    {% if category.slug == 'coffee-beans' %}Choose grind and weight{% else %}View product{% endif %}
+                </a>
             </div>
         {% empty %}
             <p>No products are available in this category yet.</p>

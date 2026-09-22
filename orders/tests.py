@@ -51,3 +51,24 @@ class CheckoutTests(TestCase):
         self.assertEqual(order_item.grind, 'whole-beans')
         self.assertEqual(order_item.weight, 250)
         self.assertNotIn('cart', self.client.session)
+
+    # Confirm products without grind and weight are saved on the order without them.
+    def test_checkout_with_canned_coffee(self):
+        category, _ = Category.objects.get_or_create(slug='canned-coffee', defaults={'name': 'Canned Coffee'})
+        can = Product.objects.create(name='Test Can', category=category, description='x', price=Decimal('200.00'))
+        self.client.force_login(self.user)
+        self.client.post(reverse('cart:add', args=[can.id]), {'quantity': 2})
+
+        self.client.post(reverse('orders:checkout'), {
+            'first_name': 'Student',
+            'last_name': 'User',
+            'email': 'student@example.com',
+            'address': '123 College Road',
+            'phone': '9876543210',
+        })
+
+        order_item = Order.objects.get(user=self.user).items.get()
+        self.assertEqual(order_item.price, Decimal('200.00'))
+        self.assertEqual(order_item.quantity, 2)
+        self.assertEqual(order_item.grind, '')
+        self.assertIsNone(order_item.weight)

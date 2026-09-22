@@ -4,5 +4,5 @@ from .views import product_detail, product_list_by_category
 
 urlpatterns = [
     path('category/<slug:category_slug>/', product_list_by_category, name='product_list_by_category'),
-    path('beans/<int:product_id>/', product_detail, name='product_detail'),
+    path('<int:product_id>/', product_detail, name='product_detail'),
 ]

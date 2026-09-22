@@ -1,7 +1,7 @@
 # views.py
 from django.shortcuts import render, get_object_or_404
 
-from .forms import ProductOptionsForm
+from .forms import get_add_to_cart_form
 from .models import Category, Product
 
 
@@ -12,10 +12,10 @@ def product_list_by_category(request, category_slug):
     return render(request, 'products/products.html', {'category': category, 'products': products})
 
 
-# Show the grind and weight choices for one coffee bean product.
+# Show one product with its add-to-cart options.
 def product_detail(request, product_id):
-    product = get_object_or_404(Product, id=product_id, category__slug='coffee-beans')
+    product = get_object_or_404(Product.objects.select_related('category'), id=product_id)
     return render(request, 'products/detail.html', {
         'product': product,
-        'form': ProductOptionsForm(),
+        'form': get_add_to_cart_form(product),
     })

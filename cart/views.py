@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from products.forms import get_add_to_cart_form
 from products.models import Product
-from products.forms import ProductOptionsForm
 
 from .cart import Cart
 
@@ -16,54 +16,38 @@ def cart_detail(request):
 # Add a selected product to the cart and return to the cart page.
 @require_POST
 def cart_add(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    form = ProductOptionsForm(request.POST)
+    product = get_object_or_404(Product.objects.select_related('category'), id=product_id)
+    form = get_add_to_cart_form(product, request.POST)
 
-    if form.is_valid():
-        Cart(request).add(
-            product,
-            grind=form.cleaned_data['grind'],
-            weight=form.cleaned_data['weight'],
-        )
-        messages.success(request, f'{product.name} was added to your cart.')
-    else:
-        messages.error(request, 'Please enter a valid quantity.')
+    if not form.is_valid():
+        messages.error(request, 'Please choose valid options and a quantity between 1 and 20.')
+        return redirect('product_detail', product_id=product.id)
 
+    Cart(request).add(
+        product,
+        quantity=form.cleaned_data['quantity'],
+        grind=form.cleaned_data.get('grind', ''),
+        weight=form.cleaned_data.get('weight'),
+    )
+    messages.success(request, f'{product.name} was added to your cart.')
     return redirect('cart:detail')
 
 
-# Update the selected product's quantity in the cart.
+# Update the quantity of one cart line.
 @require_POST
-def cart_update(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    quantity = request.POST.get('quantity', 1)
-    form = ProductOptionsForm(request.POST)
-
+def cart_update(request, line_id):
     try:
-        if form.is_valid():
-            Cart(request).update_quantity(
-                product,
-                quantity,
-                grind=form.cleaned_data['grind'],
-                weight=form.cleaned_data['weight'],
-            )
-            messages.success(request, 'Cart quantity updated.')
-        else:
-            messages.error(request, 'Please keep the selected grind and weight.')
+        Cart(request).update_quantity(line_id, request.POST.get('quantity', 1))
+        messages.success(request, 'Cart quantity updated.')
     except (TypeError, ValueError):
         messages.error(request, 'Please enter a valid quantity.')
 
     return redirect('cart:detail')
 
 
-# Remove the selected product from the cart.
+# Remove one line from the cart.
 @require_POST
-def cart_remove(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    Cart(request).remove(
-        product,
-        grind=request.POST.get('grind', 'whole-beans'),
-        weight=request.POST.get('weight', 250),
-    )
-    messages.success(request, f'{product.name} was removed from your cart.')
+def cart_remove(request, line_id):
+    Cart(request).remove(line_id)
+    messages.success(request, 'Item removed from your cart.')
     return redirect('cart:detail')

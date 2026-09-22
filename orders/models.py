@@ -37,8 +37,8 @@ class OrderItem(models.Model):
     product_name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    grind = models.CharField(max_length=30, default='whole-beans')
-    weight = models.PositiveIntegerField(default=250)
+    grind = models.CharField(max_length=30, blank=True, default='')
+    weight = models.PositiveIntegerField(null=True, blank=True)
 
     # Return the saved subtotal using the price when the order was placed.
     def get_cost(self):
